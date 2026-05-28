@@ -81,6 +81,80 @@ project ID = 23097d48
 project ID = 12be90c4
 ```
 
+## Cocotb-Style Scan Firmware
+
+The current chip image is based on:
+
+```text
+cocotb_scan_debug_firmware.c
+```
+
+It is a chip-side C firmware version of the cocotb `ram_word` scan test found
+on the remote PC at:
+
+```text
+~/caravel_user_Neuromorphic_X1_32x32/verilog/dv/cocotb/user_proj_tests/ram_word/ram_word.py
+```
+
+The firmware drives the same scan pins directly from the management CPU:
+
+- `GPIO21`: `ScanInDR`
+- `GPIO22`: `ScanInDL`
+- `GPIO35`: `ScanInCC`, held low
+- `GPIO36`: `TM`
+
+The scan sequence follows the cocotb test flow:
+
+1. Apply initial idle state.
+2. Wait for stabilization.
+3. Emit a firmware-ready checkpoint.
+4. Run WB placeholders.
+5. Run scan transaction `0x8000`.
+6. Wait two idle cycles.
+7. Run scan transaction `0x8822`.
+8. Emit completion checkpoint and enter LED heartbeat.
+
+UART prints are prefixed with `[COCOTB-SCAN]`, and the management GPIO LED is
+pulsed at each major checkpoint so the code path is visible even without UART.
+
+The current chip's Wishbone path is not working, so WB actions are placeholders
+by default. The firmware prints the intended writes/reads but does not touch
+`0x30000004` unless it is rebuilt with:
+
+```c
+#define ENABLE_WB_TOUCHES 1
+```
+
+Leave `ENABLE_WB_TOUCHES` at `0` for the currently connected chip.
+
+### Build The Cocotb-Style Firmware
+
+Copy the local source to the remote firmware directory and build:
+
+```bash
+scp cocotb_scan_debug_firmware.c ubuntu-24-04@100.98.132.51:/tmp/cocotb_scan_debug_firmware.c
+
+ssh ubuntu-24-04@100.98.132.51 '
+  cd ~/caravel_board/firmware/chipignite/scan_debug &&
+  ts=$(date +%Y%m%d_%H%M%S) &&
+  cp scan_debug.c scan_debug.c.backup_$ts &&
+  cp /tmp/cocotb_scan_debug_firmware.c scan_debug.c &&
+  make clean hex
+'
+```
+
+The last flashed build used this remote backup name:
+
+```text
+scan_debug.c.backup_20260528_123418
+```
+
+After a successful build, the new image is:
+
+```text
+~/caravel_board/firmware/chipignite/scan_debug/scan_debug.hex
+```
+
 ## Flash Using Helper Script
 
 This repo includes a local helper:
@@ -155,16 +229,18 @@ Erasing chip...
 ...done
 ```
 
-The write/verify should finish with all page compares successful:
+The write/verify should finish with all page compares successful. The exact
+byte count depends on the firmware image. The older reset-sequence image was
+`9216` bytes; the current cocotb-style firmware is `8192` bytes.
 
 ```text
-total_bytes = 9216
+total_bytes = 8192
 verifying...
 addr 0x0: read compare successful
 ...
-addr 0x2300: read compare successful
+addr 0x1f00: read compare successful
 
-total_bytes = 9216
+total_bytes = 8192
 ```
 
 In the successful session, `pll_trim` printed:
@@ -175,3 +251,11 @@ pll_trim = b'ffefff03'
 
 After flashing, press the Caravel board reset button if the firmware does not
 start automatically.
+
+For UART logs after flashing:
+
+1. Remove `J2` before flashing.
+2. Flash and verify the image.
+3. Put `J2` back for UART/serial.
+4. Press reset on the board.
+5. Watch for `[COCOTB-SCAN]` UART messages and the checkpoint LED pulses.
