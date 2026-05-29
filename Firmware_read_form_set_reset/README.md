@@ -15,11 +15,14 @@ read/scan_debug_read_firmware.c
 form/scan_debug_form_firmware.c
 set/scan_debug_set_firmware.c
 reset/scan_debug_reset_firmware.c
-common/scan_debug_hw_single_common.h
 ```
 
-These run on the Caravel management RISC-V and drive the real hardware
-scan-debug pins:
+Each per-operation file is standalone and contains the full firmware code for
+that mode. The `common/scan_debug_hw_single_common.h` file is kept only as a
+source template/reference.
+
+These firmware files run on the Caravel management RISC-V and drive the real
+hardware scan-debug pins:
 
 ```text
 GPIO21 -> ScanInDR / i_scan_se1, active low while shifting
@@ -69,7 +72,6 @@ Example for `set`:
 ```bash
 cd ~/caravel_board/firmware/chipignite/scan_debug
 cp scan_debug.c scan_debug.c.backup_$(date +%Y%m%d_%H%M%S)
-cp /home/ubuntu-24-04/Downloads/Neuromorphic_X1-Sindhu/rtl_scan_debug_testbenches/firmware/common/scan_debug_hw_single_common.h .
 cp /home/ubuntu-24-04/Downloads/Neuromorphic_X1-Sindhu/rtl_scan_debug_testbenches/firmware/set/scan_debug_set_firmware.c scan_debug.c
 make clean hex
 ```

@@ -101,32 +101,6 @@ static void print_hex32(u32 value)
     print(text);
 }
 
-static void print_u32_dec(u32 value)
-{
-    char text[11];
-    char reversed[10];
-    int count;
-    int index;
-
-    if (value == 0u) {
-        print("0");
-        return;
-    }
-
-    count = 0;
-    while ((value != 0u) && (count < 10)) {
-        reversed[count] = (char)('0' + (value % 10u));
-        value = value / 10u;
-        count = count + 1;
-    }
-
-    for (index = 0; index < count; index = index + 1) {
-        text[index] = reversed[count - index - 1];
-    }
-    text[count] = '\0';
-    print(text);
-}
-
 static void led_write(u8 value)
 {
     reg_gpio_out = (value != 0u) ? 1u : 0u;
@@ -146,7 +120,7 @@ static void checkpoint(const char *label)
     print("[SCAN-HW][");
     print(SCAN_FW_NAME);
     print("][CP ");
-    print_u32_dec(checkpoint_id);
+    print_dec(checkpoint_id);
     print("] ");
     print(label);
     print("\n");
@@ -226,13 +200,13 @@ static void print_pin_state(const char *label)
     print("][PINS] ");
     print(label);
     print(" TM=");
-    print_u32_dec(gpio_shadow_value(GPIO_TM));
+    print_dec(gpio_shadow_value(GPIO_TM));
     print(" ScanInDR=");
-    print_u32_dec(gpio_shadow_value(GPIO_SCAN_IN_DR));
+    print_dec(gpio_shadow_value(GPIO_SCAN_IN_DR));
     print(" ScanInDL=");
-    print_u32_dec(gpio_shadow_value(GPIO_SCAN_IN_DL));
+    print_dec(gpio_shadow_value(GPIO_SCAN_IN_DL));
     print(" ScanInCC=");
-    print_u32_dec(gpio_shadow_value(GPIO_SCAN_IN_CC));
+    print_dec(gpio_shadow_value(GPIO_SCAN_IN_CC));
     print("\n");
 }
 
@@ -324,13 +298,13 @@ static void print_expected_outputs(u16 word)
     print("][EXPECT] word=");
     print_hex32((u32)word);
     print(" op_set=");
-    print_u32_dec((u32)SCAN_FW_OP_SET);
+    print_dec((u32)SCAN_FW_OP_SET);
     print(" wl=");
-    print_u32_dec((u32)SCAN_FW_WL);
+    print_dec((u32)SCAN_FW_WL);
     print(" bl=");
-    print_u32_dec((u32)SCAN_FW_BL);
+    print_dec((u32)SCAN_FW_BL);
     print(" sl=");
-    print_u32_dec((u32)SCAN_FW_SL);
+    print_dec((u32)SCAN_FW_SL);
     print(" WL_addr=");
     print_hex32(wl);
     print(" BL_addr=");
@@ -439,9 +413,9 @@ static void shift_scan_word(u16 word)
         print("[SCAN-HW][");
         print(SCAN_FW_NAME);
         print("][BIT] index=");
-        print_u32_dec((u32)bit_index);
+        print_dec((u32)bit_index);
         print(" value=");
-        print_u32_dec((u32)bit_value);
+        print_dec((u32)bit_value);
         print(" shift_shadow=");
         print_hex32((u32)shift_shadow);
         print("\n");
@@ -527,7 +501,7 @@ void main(void)
         print("[SCAN-HW][");
         print(SCAN_FW_NAME);
         print("][SUMMARY][FAIL] errors=");
-        print_u32_dec(error_count);
+        print_dec(error_count);
         print("\n");
     }
 
