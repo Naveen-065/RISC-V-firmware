@@ -13,7 +13,12 @@ BIT_TIME_NS = CLK_PERIOD_NS * CLKS_PER_BIT
 SYNC = 0xA5
 OP_PROGRAM = 0x50
 OP_READ = 0x52
+OP_MATMUL = 0x4D
 RESP = 0x5A
+
+AI_STATUS_ADDR = 0xF0
+AI_DONE_WORD = 0xA1000001
+X1_AI_C_BASE = 0x80
 
 
 def _lane_value(bit, invert_mask=0):
@@ -32,6 +37,34 @@ def _response(addr, data):
         (data >> 16) & 0xFF,
         (data >> 8) & 0xFF,
         data & 0xFF,
+    ]
+
+
+def _u8(value):
+    return value & 0xFF
+
+
+def _u32(value):
+    return value & 0xFFFFFFFF
+
+
+def _response_data(response):
+    assert response[0] == RESP
+    return (
+        (response[2] << 24)
+        | (response[3] << 16)
+        | (response[4] << 8)
+        | response[5]
+    )
+
+
+def _matmul_2x2(matrix_a, matrix_b):
+    return [
+        [
+            _u32(matrix_a[row][0] * matrix_b[0][col] + matrix_a[row][1] * matrix_b[1][col])
+            for col in range(2)
+        ]
+        for row in range(2)
     ]
 
 
@@ -69,6 +102,22 @@ async def _send_program(dut, addr, data, invert_mask=0):
 
 async def _send_read(dut, addr, invert_mask=0):
     await _send_bytes(dut, [SYNC, OP_READ, addr & 0xFF], invert_mask)
+
+
+async def _send_matmul(dut, matrix_a, matrix_b, invert_mask=0):
+    payload = [
+        SYNC,
+        OP_MATMUL,
+        _u8(matrix_a[0][0]),
+        _u8(matrix_a[0][1]),
+        _u8(matrix_a[1][0]),
+        _u8(matrix_a[1][1]),
+        _u8(matrix_b[0][0]),
+        _u8(matrix_b[0][1]),
+        _u8(matrix_b[1][0]),
+        _u8(matrix_b[1][1]),
+    ]
+    await _send_bytes(dut, payload, invert_mask)
 
 
 async def _read_uart_byte(dut, label="byte"):
@@ -113,10 +162,19 @@ async def _read_response(dut, label):
     return response
 
 
+async def _read_word(dut, addr, label, invert_mask=0):
+    await _send_read(dut, addr, invert_mask)
+    response = await _read_response(dut, label)
+    assert response[0] == RESP
+    assert response[1] == (addr & 0xFF)
+    return _response_data(response)
+
+
 async def _reset(dut):
     dut.rst_i.value = 1
     dut.user_tx_lanes_i.value = 0b111
     dut.caravel_tx_fault_mask_i.value = 0
+    dut.caravel_ai_fault_mask_i.value = 0
     await ClockCycles(dut.clk_i, 8)
     dut.rst_i.value = 0
     await ClockCycles(dut.clk_i, 8)
@@ -187,3 +245,48 @@ async def tmr_uart_program_read_and_faults(dut):
 
     assert corrupted_first_byte != expected[0]
     assert remaining == expected[1:]
+
+
+@cocotb.test()
+async def tmr_ai_systolic_reram_reliable_uart(dut):
+    cocotb.start_soon(Clock(dut.clk_i, CLK_PERIOD_NS, units="ns").start())
+    await _reset(dut)
+
+    matrix_a = [
+        [2, -1],
+        [3, 4],
+    ]
+    matrix_b = [
+        [5, 6],
+        [-2, 7],
+    ]
+    expected = _matmul_2x2(matrix_a, matrix_b)
+
+    dut._log.info("Running 2x2 systolic matmul through TMR RX, then storing C into X1/ReRAM.")
+    await _send_matmul(dut, matrix_a, matrix_b, invert_mask=0b001)
+    ai_ack = await _read_response(dut, "ai_run")
+    assert ai_ack == _response(AI_STATUS_ADDR, AI_DONE_WORD)
+
+    dut._log.info("Reading X1/ReRAM result words through voted Caravel UART TX lanes.")
+    c00 = await _read_word(dut, X1_AI_C_BASE + 0, "ai_c00")
+    c01 = await _read_word(dut, X1_AI_C_BASE + 1, "ai_c01")
+    c10 = await _read_word(dut, X1_AI_C_BASE + 2, "ai_c10")
+    c11 = await _read_word(dut, X1_AI_C_BASE + 3, "ai_c11")
+    assert [[c00, c01], [c10, c11]] == expected
+
+    dut._log.info("Injecting one bad Caravel AI result: TMR UART output should still be correct.")
+    dut.caravel_ai_fault_mask_i.value = 0b001
+    await _send_matmul(dut, matrix_a, matrix_b)
+    single_fault_ack = await _read_response(dut, "single_ai_fault_ack")
+    assert single_fault_ack == _response(AI_STATUS_ADDR, AI_DONE_WORD)
+    single_fault_c00 = await _read_word(dut, X1_AI_C_BASE + 0, "single_ai_fault_c00")
+    assert single_fault_c00 == expected[0][0]
+
+    dut._log.info("Injecting two bad Caravel AI results: voted external data should become incorrect.")
+    dut.caravel_ai_fault_mask_i.value = 0b011
+    await _send_matmul(dut, matrix_a, matrix_b)
+    double_fault_ack = await _read_response(dut, "double_ai_fault_ack")
+    assert double_fault_ack == _response(AI_STATUS_ADDR, AI_DONE_WORD)
+    double_fault_c00 = await _read_word(dut, X1_AI_C_BASE + 0, "double_ai_fault_c00")
+    assert double_fault_c00 != expected[0][0]
+    dut.caravel_ai_fault_mask_i.value = 0

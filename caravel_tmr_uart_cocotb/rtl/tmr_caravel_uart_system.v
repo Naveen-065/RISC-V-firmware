@@ -228,17 +228,26 @@ module caravel_x1_uart_model #(
     input  wire clk_i,
     input  wire rst_i,
     input  wire uart_rx_i,
+    input  wire ai_result_fault_i,
     output wire uart_tx_o
 );
     localparam [7:0] SYNC_BYTE  = 8'hA5;
     localparam [7:0] RESP_BYTE  = 8'h5A;
     localparam [7:0] OP_PROGRAM = 8'h50;
     localparam [7:0] OP_READ    = 8'h52;
+    localparam [7:0] OP_MATMUL  = 8'h4D;
 
-    localparam [2:0] STATE_SYNC = 3'd0;
-    localparam [2:0] STATE_OP   = 3'd1;
-    localparam [2:0] STATE_ADDR = 3'd2;
-    localparam [2:0] STATE_DATA = 3'd3;
+    localparam [7:0] AI_STATUS_ADDR = 8'hF0;
+    localparam [31:0] AI_DONE_WORD  = 32'hA100_0001;
+    localparam [7:0] X1_AI_A_BASE   = 8'h20;
+    localparam [7:0] X1_AI_B_BASE   = 8'h24;
+    localparam [7:0] X1_AI_C_BASE   = 8'h80;
+
+    localparam [2:0] STATE_SYNC    = 3'd0;
+    localparam [2:0] STATE_OP      = 3'd1;
+    localparam [2:0] STATE_ADDR    = 3'd2;
+    localparam [2:0] STATE_DATA    = 3'd3;
+    localparam [2:0] STATE_AI_DATA = 3'd4;
 
     wire [7:0] rx_data;
     wire       rx_valid;
@@ -254,6 +263,7 @@ module caravel_x1_uart_model #(
     wire [31:0] next_data_word = {data_shift_q[23:0], rx_data};
 
     reg [31:0] x1_memory [0:255];
+    reg [7:0]  ai_operand_q [0:7];
     reg [7:0]  response_q [0:5];
     reg [2:0]  response_index_q;
     reg        response_pending_q;
@@ -298,6 +308,53 @@ module caravel_x1_uart_model #(
         end
     endtask
 
+    function signed [31:0] sx8;
+        input [7:0] value;
+        begin
+            sx8 = {{24{value[7]}}, value};
+        end
+    endfunction
+
+    task run_systolic_matmul_to_x1;
+        input [7:0] b11_i;
+        reg signed [31:0] a00;
+        reg signed [31:0] a01;
+        reg signed [31:0] a10;
+        reg signed [31:0] a11;
+        reg signed [31:0] b00;
+        reg signed [31:0] b01;
+        reg signed [31:0] b10;
+        reg signed [31:0] b11;
+        reg [31:0] c00;
+        reg [31:0] c01;
+        reg [31:0] c10;
+        reg [31:0] c11;
+        begin
+            a00 = sx8(ai_operand_q[0]);
+            a01 = sx8(ai_operand_q[1]);
+            a10 = sx8(ai_operand_q[2]);
+            a11 = sx8(ai_operand_q[3]);
+            b00 = sx8(ai_operand_q[4]);
+            b01 = sx8(ai_operand_q[5]);
+            b10 = sx8(ai_operand_q[6]);
+            b11 = sx8(b11_i);
+
+            c00 = a00 * b00 + a01 * b10;
+            c01 = a00 * b01 + a01 * b11;
+            c10 = a10 * b00 + a11 * b10;
+            c11 = a10 * b01 + a11 * b11;
+
+            x1_memory[X1_AI_A_BASE + 8'd0] <= {ai_operand_q[0], ai_operand_q[1], ai_operand_q[2], ai_operand_q[3]};
+            x1_memory[X1_AI_B_BASE + 8'd0] <= {ai_operand_q[4], ai_operand_q[5], ai_operand_q[6], b11_i};
+            x1_memory[X1_AI_C_BASE + 8'd0] <= ai_result_fault_i ? (c00 ^ 32'h0000_0001) : c00;
+            x1_memory[X1_AI_C_BASE + 8'd1] <= c01;
+            x1_memory[X1_AI_C_BASE + 8'd2] <= c10;
+            x1_memory[X1_AI_C_BASE + 8'd3] <= c11;
+
+            queue_response(AI_STATUS_ADDR, AI_DONE_WORD);
+        end
+    endtask
+
     always @(posedge clk_i) begin
         if (rst_i) begin
             state_q <= STATE_SYNC;
@@ -313,6 +370,9 @@ module caravel_x1_uart_model #(
 
             for (init_i = 0; init_i < 256; init_i = init_i + 1) begin
                 x1_memory[init_i] <= 32'h0000_0000;
+            end
+            for (init_i = 0; init_i < 8; init_i = init_i + 1) begin
+                ai_operand_q[init_i] <= 8'h00;
             end
             for (init_i = 0; init_i < 6; init_i = init_i + 1) begin
                 response_q[init_i] <= 8'h00;
@@ -348,6 +408,9 @@ module caravel_x1_uart_model #(
                         op_q <= rx_data;
                         if ((rx_data == OP_PROGRAM) || (rx_data == OP_READ)) begin
                             state_q <= STATE_ADDR;
+                        end else if (rx_data == OP_MATMUL) begin
+                            byte_count_q <= 3'd0;
+                            state_q <= STATE_AI_DATA;
                         end else begin
                             state_q <= STATE_SYNC;
                         end
@@ -377,6 +440,17 @@ module caravel_x1_uart_model #(
                         end
                     end
 
+                    STATE_AI_DATA: begin
+                        ai_operand_q[byte_count_q] <= rx_data;
+                        if (byte_count_q == 3'd7) begin
+                            run_systolic_matmul_to_x1(rx_data);
+                            byte_count_q <= 3'd0;
+                            state_q <= STATE_SYNC;
+                        end else begin
+                            byte_count_q <= byte_count_q + 3'd1;
+                        end
+                    end
+
                     default: begin
                         state_q <= STATE_SYNC;
                     end
@@ -396,6 +470,7 @@ module tmr_caravel_uart_system #(
     output wire       user_rx_o,
 
     input  wire [2:0] caravel_tx_fault_mask_i,
+    input  wire [2:0] caravel_ai_fault_mask_i,
     output wire [2:0] caravel_tx_raw_o,
     output wire [2:0] caravel_tx_faulted_o,
     output wire       voted_caravel_rx_o,
@@ -426,6 +501,7 @@ module tmr_caravel_uart_system #(
         .clk_i(clk_i),
         .rst_i(rst_i),
         .uart_rx_i(caravel_rx),
+        .ai_result_fault_i(caravel_ai_fault_mask_i[0]),
         .uart_tx_o(caravel_tx_raw[0])
     );
 
@@ -435,6 +511,7 @@ module tmr_caravel_uart_system #(
         .clk_i(clk_i),
         .rst_i(rst_i),
         .uart_rx_i(caravel_rx),
+        .ai_result_fault_i(caravel_ai_fault_mask_i[1]),
         .uart_tx_o(caravel_tx_raw[1])
     );
 
@@ -444,6 +521,7 @@ module tmr_caravel_uart_system #(
         .clk_i(clk_i),
         .rst_i(rst_i),
         .uart_rx_i(caravel_rx),
+        .ai_result_fault_i(caravel_ai_fault_mask_i[2]),
         .uart_tx_o(caravel_tx_raw[2])
     );
 endmodule
