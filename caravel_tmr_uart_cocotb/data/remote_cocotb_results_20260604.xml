@@ -1,0 +1,8 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1780542357" />
+    <testcase name="tmr_uart_program_read_and_faults" classname="test_tmr_caravel_uart" file="/home/vboxuser/caravel_tmr_uart_cocotb_qwen_tmr_20260604/tests/test_tmr_caravel_uart.py" lineno="227" time="1.220599889755249" sim_time_ns="34880.0" ratio_time="28576.112690780294" />
+    <testcase name="tmr_ai_systolic_reram_reliable_uart" classname="test_tmr_caravel_uart" file="/home/vboxuser/caravel_tmr_uart_cocotb_qwen_tmr_20260604/tests/test_tmr_caravel_uart.py" lineno="289" time="3.207386016845703" sim_time_ns="92520.0" ratio_time="28845.919859371526" />
+    <testcase name="tmr_qwen_x1_parity_metadata_uart_tmr" classname="test_tmr_caravel_uart" file="/home/vboxuser/caravel_tmr_uart_cocotb_qwen_tmr_20260604/tests/test_tmr_caravel_uart.py" lineno="334" time="10.548185348510742" sim_time_ns="299530.0" ratio_time="28396.353505704134" />
+  </testsuite>
+</testsuites>

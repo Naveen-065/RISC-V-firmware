@@ -4,7 +4,7 @@
     "x1_base": "0x30000000",
     "matmul_base": "0x31000000",
     "partcl_matmul_module": "verilog/rtl/mat_mult_wb.v",
-    "note": "The PARTCL RTL implements an 8x8 systolic matrix multiplier. This fast system-level UART/TMR test uses a behavioral 2x2 slice of the same A x B -> C dataflow."
+    "note": "The harness instantiates the real PARTCL 8x8 mat_mult_wb RTL in each replicated Caravel endpoint. The UART test drives a 2x2 payload into the top-left corner of the real 8x8 array and zero-fills the rest before copying C00, C01, C10, and C11 into the modeled X1/ReRAM words."
   },
   "uart_protocol": {
     "sync": "0xA5",

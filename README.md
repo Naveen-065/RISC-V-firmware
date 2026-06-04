@@ -3,6 +3,34 @@
 This repository contains chip firmware and helper scripts for the Caravel board
 connected to the remote Ubuntu PC over Tailscale.
 
+## Reliable AI TMR Cocotb Experiment
+
+The directory `caravel_tmr_uart_cocotb` contains the current reliable-AI
+experiment:
+
+- three replicated Caravel/PARTCL endpoints with UART TMR voting,
+- the real BMsemi PARTCL `mat_mult_wb.v` systolic array RTL instantiated in
+  each replica,
+- behavioral X1/ReRAM storage for systolic results and Qwen parity records,
+- a full-file Qwen3-0.6B safetensors SEU/parity/correction run,
+- remote Icarus/cocotb results from `100.115.20.54`.
+
+Key result:
+
+```text
+skew Injected 64 SEU bits, corrected 64, 0 uncorrectable blocks, SHA-256 restored.
+Remote cocotb: TESTS=3 PASS=3 FAIL=0 SKIP=0
+Qwen3-0.6B X1 parity capacity: 211.402 Mbit effective, 634.205 Mbit with three-way TMR replication.
+```
+
+See:
+
+```text
+caravel_tmr_uart_cocotb/README.md
+caravel_tmr_uart_cocotb/data/qwen_x1_ecc_manifest.json
+caravel_tmr_uart_cocotb/data/remote_cocotb_results_20260604.json
+```
+
 ## Current Firmware
 
 The current firmware source is:

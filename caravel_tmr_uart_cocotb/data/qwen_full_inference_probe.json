@@ -1,0 +1,10 @@
+{
+  "model_dir": "E:\\hf_models\\Qwen--Qwen3-0.6B",
+  "prompt": "Explain in one sentence why ECC helps reliable AI inference.",
+  "max_new_tokens": 24,
+  "device": "cpu",
+  "torch": "2.12.0+cpu",
+  "elapsed_seconds": 5.2029478549957275,
+  "output": "Explain in one sentence why ECC helps reliable AI inference. Also, explain in one sentence why ECC is important for the security of AI models. Additionally, explain in one sentence why",
+  "note": "The full local Qwen3-0.6B safetensors model loaded through Transformers/PyTorch. The laptop has an NVIDIA GeForce GTX 950M 4GB, but this uv PyTorch environment is CPU-only."
+}

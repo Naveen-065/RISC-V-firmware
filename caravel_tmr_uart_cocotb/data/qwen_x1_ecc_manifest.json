@@ -1,0 +1,555 @@
+{
+  "experiment": "qwen_x1_2d_parity_tmr_uart",
+  "created_utc": "2026-06-04T03:02:50Z",
+  "model_dir": "E:\\hf_models\\Qwen--Qwen3-0.6B",
+  "block_size_bytes": 4096,
+  "row_bytes": 64,
+  "rows_per_block": 64,
+  "column_bits_per_block": 512,
+  "parity_bytes_per_block": 72,
+  "correction_limit": "one corrected bit per 4096-byte block",
+  "files": [
+    {
+      "name": "model.safetensors",
+      "path": "E:\\hf_models\\Qwen--Qwen3-0.6B\\model.safetensors",
+      "size_bytes": 1503300328,
+      "blocks": 367017,
+      "sha256": "f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b",
+      "safetensors_data_start": 35560,
+      "parity_file": "E:\\hf_models\\Qwen--Qwen3-0.6B\\.x1_ecc\\qwen_x1_ecc_20260604\\parity\\model.safetensors.2dparity.bin",
+      "parity_bytes": 26425224
+    }
+  ],
+  "total_model_bytes": 1503300328,
+  "total_model_bits": 12026402624,
+  "total_blocks": 367017,
+  "total_parity_bytes": 26425224,
+  "total_parity_bits": 211401792,
+  "effective_x1_parity_mbit": 211.401792,
+  "tmr_physical_x1_parity_mbit": 634.205376,
+  "repair_demo": {
+    "injected_bits": 64,
+    "corrected_bits": 64,
+    "detected_blocks": 64,
+    "uncorrectable_blocks": 0,
+    "clean_blocks": 366953,
+    "sha256_restored": true,
+    "original_model_tree_sha256": "e726c5b2e4148cd8435b77ccfca9845dee24c0530677cddca2aa30945adaf1c9",
+    "restored_model_tree_sha256": "e726c5b2e4148cd8435b77ccfca9845dee24c0530677cddca2aa30945adaf1c9",
+    "log_line": "skew Injected 64 SEU bits, corrected 64, 0 uncorrectable blocks, SHA-256 restored."
+  },
+  "failure_sweep": {
+    "seed": 20260621,
+    "max_seu": 4096,
+    "step": 64,
+    "trials": 64,
+    "total_blocks": 367017,
+    "first_observed_failure": {
+      "seu_bits": 64,
+      "trials": 64,
+      "failure_probability": 0.015625,
+      "avg_uncorrectable_blocks": 0.015625
+    },
+    "theoretical_random_seu_50pct_failure_bits": 713.2976920859473,
+    "rows": [
+      {
+        "seu_bits": 64,
+        "trials": 64,
+        "failure_probability": 0.015625,
+        "avg_uncorrectable_blocks": 0.015625
+      },
+      {
+        "seu_bits": 128,
+        "trials": 64,
+        "failure_probability": 0.078125,
+        "avg_uncorrectable_blocks": 0.09375
+      },
+      {
+        "seu_bits": 192,
+        "trials": 64,
+        "failure_probability": 0.046875,
+        "avg_uncorrectable_blocks": 0.046875
+      },
+      {
+        "seu_bits": 256,
+        "trials": 64,
+        "failure_probability": 0.046875,
+        "avg_uncorrectable_blocks": 0.046875
+      },
+      {
+        "seu_bits": 320,
+        "trials": 64,
+        "failure_probability": 0.21875,
+        "avg_uncorrectable_blocks": 0.234375
+      },
+      {
+        "seu_bits": 384,
+        "trials": 64,
+        "failure_probability": 0.15625,
+        "avg_uncorrectable_blocks": 0.171875
+      },
+      {
+        "seu_bits": 448,
+        "trials": 64,
+        "failure_probability": 0.171875,
+        "avg_uncorrectable_blocks": 0.1875
+      },
+      {
+        "seu_bits": 512,
+        "trials": 64,
+        "failure_probability": 0.28125,
+        "avg_uncorrectable_blocks": 0.28125
+      },
+      {
+        "seu_bits": 576,
+        "trials": 64,
+        "failure_probability": 0.4375,
+        "avg_uncorrectable_blocks": 0.609375
+      },
+      {
+        "seu_bits": 640,
+        "trials": 64,
+        "failure_probability": 0.4375,
+        "avg_uncorrectable_blocks": 0.625
+      },
+      {
+        "seu_bits": 704,
+        "trials": 64,
+        "failure_probability": 0.546875,
+        "avg_uncorrectable_blocks": 0.703125
+      },
+      {
+        "seu_bits": 768,
+        "trials": 64,
+        "failure_probability": 0.609375,
+        "avg_uncorrectable_blocks": 0.921875
+      },
+      {
+        "seu_bits": 832,
+        "trials": 64,
+        "failure_probability": 0.546875,
+        "avg_uncorrectable_blocks": 0.875
+      },
+      {
+        "seu_bits": 896,
+        "trials": 64,
+        "failure_probability": 0.609375,
+        "avg_uncorrectable_blocks": 1.0625
+      },
+      {
+        "seu_bits": 960,
+        "trials": 64,
+        "failure_probability": 0.6875,
+        "avg_uncorrectable_blocks": 1.546875
+      },
+      {
+        "seu_bits": 1024,
+        "trials": 64,
+        "failure_probability": 0.78125,
+        "avg_uncorrectable_blocks": 1.625
+      },
+      {
+        "seu_bits": 1088,
+        "trials": 64,
+        "failure_probability": 0.6875,
+        "avg_uncorrectable_blocks": 1.375
+      },
+      {
+        "seu_bits": 1152,
+        "trials": 64,
+        "failure_probability": 0.828125,
+        "avg_uncorrectable_blocks": 1.609375
+      },
+      {
+        "seu_bits": 1216,
+        "trials": 64,
+        "failure_probability": 0.890625,
+        "avg_uncorrectable_blocks": 2.0
+      },
+      {
+        "seu_bits": 1280,
+        "trials": 64,
+        "failure_probability": 0.90625,
+        "avg_uncorrectable_blocks": 2.578125
+      },
+      {
+        "seu_bits": 1344,
+        "trials": 64,
+        "failure_probability": 0.921875,
+        "avg_uncorrectable_blocks": 2.21875
+      },
+      {
+        "seu_bits": 1408,
+        "trials": 64,
+        "failure_probability": 0.921875,
+        "avg_uncorrectable_blocks": 2.703125
+      },
+      {
+        "seu_bits": 1472,
+        "trials": 64,
+        "failure_probability": 0.953125,
+        "avg_uncorrectable_blocks": 2.921875
+      },
+      {
+        "seu_bits": 1536,
+        "trials": 64,
+        "failure_probability": 0.96875,
+        "avg_uncorrectable_blocks": 2.96875
+      },
+      {
+        "seu_bits": 1600,
+        "trials": 64,
+        "failure_probability": 0.984375,
+        "avg_uncorrectable_blocks": 3.78125
+      },
+      {
+        "seu_bits": 1664,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 3.59375
+      },
+      {
+        "seu_bits": 1728,
+        "trials": 64,
+        "failure_probability": 0.953125,
+        "avg_uncorrectable_blocks": 3.84375
+      },
+      {
+        "seu_bits": 1792,
+        "trials": 64,
+        "failure_probability": 0.984375,
+        "avg_uncorrectable_blocks": 4.71875
+      },
+      {
+        "seu_bits": 1856,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 4.859375
+      },
+      {
+        "seu_bits": 1920,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 5.0
+      },
+      {
+        "seu_bits": 1984,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 5.46875
+      },
+      {
+        "seu_bits": 2048,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 5.671875
+      },
+      {
+        "seu_bits": 2112,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 6.390625
+      },
+      {
+        "seu_bits": 2176,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 6.5625
+      },
+      {
+        "seu_bits": 2240,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 6.96875
+      },
+      {
+        "seu_bits": 2304,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 7.734375
+      },
+      {
+        "seu_bits": 2368,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 8.125
+      },
+      {
+        "seu_bits": 2432,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 8.078125
+      },
+      {
+        "seu_bits": 2496,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 8.5
+      },
+      {
+        "seu_bits": 2560,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 8.53125
+      },
+      {
+        "seu_bits": 2624,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 9.015625
+      },
+      {
+        "seu_bits": 2688,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 9.203125
+      },
+      {
+        "seu_bits": 2752,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 10.453125
+      },
+      {
+        "seu_bits": 2816,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 11.5625
+      },
+      {
+        "seu_bits": 2880,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 11.03125
+      },
+      {
+        "seu_bits": 2944,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 11.78125
+      },
+      {
+        "seu_bits": 3008,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 11.90625
+      },
+      {
+        "seu_bits": 3072,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 12.921875
+      },
+      {
+        "seu_bits": 3136,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 13.828125
+      },
+      {
+        "seu_bits": 3200,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 14.375
+      },
+      {
+        "seu_bits": 3264,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 13.84375
+      },
+      {
+        "seu_bits": 3328,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 14.703125
+      },
+      {
+        "seu_bits": 3392,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 15.75
+      },
+      {
+        "seu_bits": 3456,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 16.734375
+      },
+      {
+        "seu_bits": 3520,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 17.625
+      },
+      {
+        "seu_bits": 3584,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 17.3125
+      },
+      {
+        "seu_bits": 3648,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 18.28125
+      },
+      {
+        "seu_bits": 3712,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 18.53125
+      },
+      {
+        "seu_bits": 3776,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 19.015625
+      },
+      {
+        "seu_bits": 3840,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 20.46875
+      },
+      {
+        "seu_bits": 3904,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 20.6875
+      },
+      {
+        "seu_bits": 3968,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 20.859375
+      },
+      {
+        "seu_bits": 4032,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 22.1875
+      },
+      {
+        "seu_bits": 4096,
+        "trials": 64,
+        "failure_probability": 1.0,
+        "avg_uncorrectable_blocks": 23.953125
+      }
+    ]
+  },
+  "deterministic_first_failure": {
+    "seed": 20260604,
+    "first_uncorrectable_at_seu_bits": 120,
+    "duplicate_block": 122154,
+    "previous_hit_at_seu_bits": 59,
+    "why": "2D parity corrects one bit per block; the duplicate block has two SEUs."
+  },
+  "x1_words": [
+    {
+      "addr": 160,
+      "name": "model_size_low",
+      "data": 1503300328
+    },
+    {
+      "addr": 161,
+      "name": "model_size_high",
+      "data": 0
+    },
+    {
+      "addr": 162,
+      "name": "parity_bits_low",
+      "data": 211401792
+    },
+    {
+      "addr": 163,
+      "name": "parity_bits_high",
+      "data": 0
+    },
+    {
+      "addr": 164,
+      "name": "block_count",
+      "data": 367017
+    },
+    {
+      "addr": 165,
+      "name": "injected_bits",
+      "data": 64
+    },
+    {
+      "addr": 166,
+      "name": "corrected_bits",
+      "data": 64
+    },
+    {
+      "addr": 167,
+      "name": "uncorrectable_blocks",
+      "data": 0
+    },
+    {
+      "addr": 168,
+      "name": "original_sha32",
+      "data": 3878077874
+    },
+    {
+      "addr": 169,
+      "name": "restored_sha32",
+      "data": 3878077874
+    },
+    {
+      "addr": 170,
+      "name": "status",
+      "data": 1369593345
+    }
+  ],
+  "x1_sample_parity_words": [
+    {
+      "addr": 176,
+      "name": "sample_parity_word_0",
+      "data": 2167732168
+    },
+    {
+      "addr": 177,
+      "name": "sample_parity_word_1",
+      "data": 156061309
+    },
+    {
+      "addr": 178,
+      "name": "sample_parity_word_2",
+      "data": 1264363933
+    },
+    {
+      "addr": 179,
+      "name": "sample_parity_word_3",
+      "data": 980420658
+    },
+    {
+      "addr": 180,
+      "name": "sample_parity_word_4",
+      "data": 829117460
+    },
+    {
+      "addr": 181,
+      "name": "sample_parity_word_5",
+      "data": 1446189175
+    },
+    {
+      "addr": 182,
+      "name": "sample_parity_word_6",
+      "data": 104756806
+    },
+    {
+      "addr": 183,
+      "name": "sample_parity_word_7",
+      "data": 1577663313
+    }
+  ],
+  "hardware": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.13",
+    "nvidia_smi": "NVIDIA GeForce GTX 950M, 4096 MiB, 566.03",
+    "torch_version": "2.12.0+cpu",
+    "torch_cuda_available": false
+  },
+  "elapsed_seconds": 856.656836271286
+}

@@ -1,4 +1,6 @@
 import os
+import json
+from pathlib import Path
 
 import cocotb
 from cocotb.clock import Clock
@@ -19,6 +21,7 @@ RESP = 0x5A
 AI_STATUS_ADDR = 0xF0
 AI_DONE_WORD = 0xA1000001
 X1_AI_C_BASE = 0x80
+X1_QWEN_STATUS_RESTORED = 0x51A25601
 
 
 def _lane_value(bit, invert_mask=0):
@@ -66,6 +69,42 @@ def _matmul_2x2(matrix_a, matrix_b):
         ]
         for row in range(2)
     ]
+
+
+def _load_qwen_manifest():
+    manifest_path = os.environ.get("QWEN_X1_ECC_MANIFEST")
+    if manifest_path:
+        path = Path(manifest_path)
+    else:
+        path = Path(__file__).resolve().parents[1] / "data" / "qwen_x1_ecc_manifest.json"
+
+    if path.exists():
+        with path.open("r", encoding="utf-8") as handle:
+            return json.load(handle)
+
+    return {
+        "repair_demo": {
+            "injected_bits": 64,
+            "corrected_bits": 64,
+            "uncorrectable_blocks": 0,
+            "sha256_restored": True,
+        },
+        "x1_words": [
+            {"addr": 0xA0, "name": "model_size_low", "data": 0x599C18A8},
+            {"addr": 0xA1, "name": "model_size_high", "data": 0x00000000},
+            {"addr": 0xA2, "name": "parity_bits_low", "data": 0x0C996900},
+            {"addr": 0xA3, "name": "parity_bits_high", "data": 0x00000000},
+            {"addr": 0xA4, "name": "block_count", "data": 0x000599A9},
+            {"addr": 0xA5, "name": "injected_bits", "data": 64},
+            {"addr": 0xA6, "name": "corrected_bits", "data": 64},
+            {"addr": 0xA7, "name": "uncorrectable_blocks", "data": 0},
+            {"addr": 0xAA, "name": "status", "data": X1_QWEN_STATUS_RESTORED},
+        ],
+        "x1_sample_parity_words": [
+            {"addr": 0xB0, "name": "sample_parity_word_0", "data": 0x00000000},
+            {"addr": 0xB1, "name": "sample_parity_word_1", "data": 0x00000000},
+        ],
+    }
 
 
 async def _drive_user_uart_bit(dut, bit, invert_mask=0):
@@ -290,3 +329,35 @@ async def tmr_ai_systolic_reram_reliable_uart(dut):
     double_fault_c00 = await _read_word(dut, X1_AI_C_BASE + 0, "double_ai_fault_c00")
     assert double_fault_c00 != expected[0][0]
     dut.caravel_ai_fault_mask_i.value = 0
+
+
+@cocotb.test()
+async def tmr_qwen_x1_parity_metadata_uart_tmr(dut):
+    cocotb.start_soon(Clock(dut.clk_i, CLK_PERIOD_NS, units="ns").start())
+    await _reset(dut)
+
+    manifest = _load_qwen_manifest()
+    words = manifest["x1_words"] + manifest.get("x1_sample_parity_words", [])[:8]
+    expected_by_name = {item["name"]: _u32(int(item["data"])) for item in manifest["x1_words"]}
+
+    dut._log.info("Programming Qwen X1 parity/correction records through one faulted user RX lane.")
+    for item in words:
+        addr = int(item["addr"]) & 0xFF
+        data = _u32(int(item["data"]))
+        await _send_program(dut, addr, data, invert_mask=0b010)
+        response = await _read_response(dut, f"qwen_program_{item['name']}")
+        assert response == _response(addr, data)
+
+    dut._log.info("Reading Qwen X1 records with one faulted Caravel TX lane; TMR must preserve UART data.")
+    dut.caravel_tx_fault_mask_i.value = 0b001
+    readback = {}
+    for item in manifest["x1_words"]:
+        addr = int(item["addr"]) & 0xFF
+        readback[item["name"]] = await _read_word(dut, addr, f"qwen_read_{item['name']}")
+    dut.caravel_tx_fault_mask_i.value = 0
+
+    assert readback["injected_bits"] == expected_by_name["injected_bits"]
+    assert readback["corrected_bits"] == expected_by_name["corrected_bits"]
+    assert readback["uncorrectable_blocks"] == 0
+    assert readback["status"] == X1_QWEN_STATUS_RESTORED
+    assert readback["injected_bits"] == readback["corrected_bits"]

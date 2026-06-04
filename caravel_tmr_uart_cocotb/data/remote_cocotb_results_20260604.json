@@ -1,0 +1,39 @@
+{
+  "remote_host": "Ubuntu-rv5-tci-BMServer",
+  "remote_ip": "100.115.20.54",
+  "remote_user": "vboxuser",
+  "remote_workdir": "/home/vboxuser/caravel_tmr_uart_cocotb_qwen_tmr_20260604",
+  "partcl_rtl_dir": "/home/vboxuser/partcl_neuromorphic_compute/verilog/rtl",
+  "simulator": "Icarus Verilog 11.0",
+  "cocotb": "2.0.1",
+  "random_seed": 1780542357,
+  "command": "PATH=$HOME/.local/bin:$PATH PARTCL_RTL_DIR=$HOME/partcl_neuromorphic_compute/verilog/rtl make",
+  "summary": {
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "skip": 0,
+    "total_sim_time_ns": 426930.0,
+    "total_real_time_seconds": 14.99
+  },
+  "testcases": [
+    {
+      "name": "tmr_uart_program_read_and_faults",
+      "status": "PASS",
+      "sim_time_ns": 34880.0,
+      "real_time_seconds": 1.220599889755249
+    },
+    {
+      "name": "tmr_ai_systolic_reram_reliable_uart",
+      "status": "PASS",
+      "sim_time_ns": 92520.0,
+      "real_time_seconds": 3.207386016845703
+    },
+    {
+      "name": "tmr_qwen_x1_parity_metadata_uart_tmr",
+      "status": "PASS",
+      "sim_time_ns": 299530.0,
+      "real_time_seconds": 10.548185348510742
+    }
+  ]
+}
