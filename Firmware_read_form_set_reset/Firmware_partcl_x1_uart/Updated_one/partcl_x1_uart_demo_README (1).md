@@ -1,16 +1,7 @@
 # PARTCL X1 UART Demo Firmware
 
-This firmware is corrected for the X1 RTL in:
-
-```text
-C:\Users\elesamj\Documents\terminal\Neuromorphic_X1-Sindhu\RTL_indentation
-```
-
-The corrected firmware file is:
-
-```text
-C:\Users\elesamj\Downloads\partcl_x1_uart_demo.c
-```
+This firmware demonstrates a RISC-V controlled PARTCL-to-X1 flow using the
+Caravel user Wishbone interface and UART TX output.
 
 ## What The Firmware Does
 
@@ -24,7 +15,7 @@ C:\Users\elesamj\Downloads\partcl_x1_uart_demo.c
 
 ## X1 Wishbone Address
 
-Sindhu's `Wb_slave.sv` accepts Wishbone transactions only when:
+The X1 `Wb_slave.sv` accepts Wishbone transactions only when:
 
 ```verilog
 i_wb_stb == 1
@@ -42,7 +33,7 @@ So all X1 command writes and X1 readbacks use:
 ## First Three X1 Config Packets
 
 Before normal cell commands, the RTL consumes the first three packets as config.
-The firmware now matches Sindhu's testbench:
+The firmware sends:
 
 ```text
 0x00036472  target_set2:target_set1
@@ -77,7 +68,7 @@ packet = ((mode & 0x3u) << 30) |
 
 ## Mode Values
 
-Sindhu's `top_module.sv` maps:
+The X1 `top_module.sv` maps:
 
 ```text
 00 = program reset
@@ -131,9 +122,10 @@ receiver is not expecting a clean binary stream.
 
 ## Important Notes
 
-- The Sindhu RTL folder validates the X1 command packet format.
-- The PARTCL register map is not present in the Sindhu X1 RTL folder, so the
-  PARTCL side still assumes the `mat_mult_wb` map used earlier:
+- The X1 RTL defines and validates the command packet format used by this
+  firmware.
+- If PARTCL is integrated as `mat_mult_wb`, this firmware assumes the following
+  register map:
   `CTRL=0x31000000`, `STATUS=0x31000004`, `A=0x31000100`,
   `B=0x31000200`, `C=0x31000400`.
 - X1 receives only the low 8-bit PWM/data field from each command packet.
