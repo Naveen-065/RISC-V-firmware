@@ -1,8 +1,8 @@
 #define SCAN_FW_NAME "READ_PLACEHOLDER"
 #define SCAN_FW_OP_SET 0u
-#define SCAN_FW_WL 3u
-#define SCAN_FW_BL 4u
-#define SCAN_FW_SL 5u
+#define SCAN_FW_WL 0u
+#define SCAN_FW_BL 0u
+#define SCAN_FW_SL 0u
 #define SCAN_FW_PLACEHOLDER 1u
 #include <defs.h>
 #include <stub.h>
@@ -471,9 +471,9 @@ void main(void)
 
     checkpoint_id = 0u;
     error_count = 0u;
-
-    checkpoint("configure management core UART and GPIO");
+    
     configure_mgmt_core();
+    checkpoint("configure management core UART and GPIO");
     checkpoint("configure scan GPIO pads");
     configure_scan_gpio();
 
