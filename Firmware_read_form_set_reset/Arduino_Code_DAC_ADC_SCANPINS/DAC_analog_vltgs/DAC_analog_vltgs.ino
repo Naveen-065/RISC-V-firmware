@@ -1,3 +1,5 @@
+// Teensy 4.1 usb port ----> usb;xxxxxxx/4/0/2
+
 #include "DAC_read.h"
 #include <Adafruit_ADS1X15.h>
 #include<math.h>
