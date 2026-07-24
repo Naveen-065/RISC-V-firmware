@@ -1,0 +1,407 @@
+<mxfile host="app.diagrams.net" agent="Codex">
+  <diagram id="wire-level-teensy-adc-dac-caravel" name="Wire Level Setup">
+    <mxGraphModel dx="2828" dy="1486" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1850" pageHeight="1220" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#0f172a;" value="Teensy 4.1 DAC/ADC and Teensy 2 ScanDebug to Caravel Wire-Level Setup" vertex="1">
+          <mxGeometry height="42" width="1280" x="280" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#334155;" value="Single DAC1 analog setup, ADS1115 shunt readout, and separate Teensy 2 external xclk / ScanDebug packet driver. DAC[2] reaches Vcc_set / GPIO27 through the shunt resistor." vertex="1">
+          <mxGeometry height="28" width="1300" x="270" y="62" as="geometry" />
+        </mxCell>
+        <mxCell id="teensy_body" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=2;fontSize=14;fontColor=#0f172a;spacing=12;fontStyle=1;" value="Teensy 4.1&#xa;&#xa;Firmware roles:&#xa;Serial command parser&#xa;SPI1 DAC control&#xa;I2C ADS1115 readout&#xa;SET / RESET / READ pulse control" vertex="1">
+          <mxGeometry height="790" width="230" x="50" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="t_sck" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="Pin 27&#xa;SPI1 SCK" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="t_mosi" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="Pin 26&#xa;SPI1 MOSI" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="t_cs1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="Pin 2&#xa;CS DAC1" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="t_ldac" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="Pin 6&#xa;LDAC optional" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="t_dac_3v3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="3.3 V&#xa;logic VIO" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="t_dac_gnd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="GND&#xa;common ground" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="t_sda" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="Pin 18&#xa;Wire SDA" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="t_scl" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="Pin 19&#xa;Wire SCL" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="785" as="geometry" />
+        </mxCell>
+        <mxCell id="t_adc_3v3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="3.3 V&#xa;ADC VDD" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="t_adc_gnd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#0f172a;align=center;" value="GND&#xa;ADC GND" vertex="1">
+          <mxGeometry height="28" width="140" x="300" y="855" as="geometry" />
+        </mxCell>
+        <mxCell id="dac1_body" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#dcfce7;strokeColor=#16a34a;strokeWidth=2;fontSize=13;fontColor=#052e16;spacing=10;fontStyle=1;" value="DAC81416 DAC1 only&#xa;Main bank used by dac_write()&#xa;24-bit SPI frame: channel register + 16-bit code&#xa;DAC[0]..DAC[15] register addresses 0x10..0x1F" vertex="1">
+          <mxGeometry height="500" width="360" x="520" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_sclk" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="SCLK" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_sdi" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="SDI" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_cs" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="CS/SYNC" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_ldac" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="LDAC" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_vio" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="VIO" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_gnd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="GND" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="caravel_body" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fee2e2;strokeColor=#dc2626;strokeWidth=2;fontSize=14;fontColor=#450a0a;spacing=12;fontStyle=1;" value="Caravel / ReRAM Chip Pads&#xa;Left side: analog bias / supply DAC mapping&#xa;Right side: scan, TM, reset, and xclk" vertex="1">
+          <mxGeometry height="840" width="410" x="1040" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac0" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[0]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[1]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="172" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[2]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="204" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[3]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="236" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[4]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="268" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[5]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[9]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="332" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[10]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="364" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[11]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="396" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[12]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="428" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[13]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[14]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="492" as="geometry" />
+        </mxCell>
+        <mxCell id="src_dac15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;align=center;" value="DAC[15]" vertex="1">
+          <mxGeometry height="24" width="105" x="775" y="524" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio33" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Vcc_read&#xa;analog_io[26] / GPIO33" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Vcc_wl_read&#xa;analog_io[19] / GPIO26" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="172" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Vcc_set&#xa;analog_io[20] / GPIO27" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="204" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio30" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Vcc_wl_set&#xa;analog_io[23] / GPIO30" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="236" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Vcc_wl_reset&#xa;analog_io[21] / GPIO28" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="268" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_vdda2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Vcc_reset&#xa;VDDa2 / VDDa2" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio34" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Iref&#xa;analog_io[27] / GPIO34" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="332" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Vcomp&#xa;analog_io[25] / GPIO32" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="364" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio31" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Bias_comp2&#xa;analog_io[24] / GPIO31" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="396" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio29" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Vbias&#xa;analog_io[22] / GPIO29" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="428" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_gpio25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="dc_bias&#xa;analog_io[18] / GPIO25" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_vdda1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="VDDa1&#xa;VDDa1 / VDDa1" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="492" as="geometry" />
+        </mxCell>
+        <mxCell id="pad_vccd2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="VDDc2&#xa;VCCd2 / VCCd2" vertex="1">
+          <mxGeometry height="28" width="205" x="1040" y="524" as="geometry" />
+        </mxCell>
+        <mxCell id="alias0" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="variable" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="alias1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="variable" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="177" as="geometry" />
+        </mxCell>
+        <mxCell id="alias2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="variable" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="209" as="geometry" />
+        </mxCell>
+        <mxCell id="alias3" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="variable" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="241" as="geometry" />
+        </mxCell>
+        <mxCell id="alias4" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="variable" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="273" as="geometry" />
+        </mxCell>
+        <mxCell id="alias5" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="variable" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="305" as="geometry" />
+        </mxCell>
+        <mxCell id="alias9" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="0.5 V" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="337" as="geometry" />
+        </mxCell>
+        <mxCell id="alias10" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="0.9 V" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="369" as="geometry" />
+        </mxCell>
+        <mxCell id="alias11" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="0.6 V" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="401" as="geometry" />
+        </mxCell>
+        <mxCell id="alias12" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="1.6 V" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="433" as="geometry" />
+        </mxCell>
+        <mxCell id="alias13" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="1.0 V" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="465" as="geometry" />
+        </mxCell>
+        <mxCell id="alias14" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="5.0 V" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="497" as="geometry" />
+        </mxCell>
+        <mxCell id="alias15" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#64748b;" value="2.1 V" vertex="1">
+          <mxGeometry height="18" width="100" x="1255" y="529" as="geometry" />
+        </mxCell>
+        <mxCell id="ads_body" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fef3c7;strokeColor=#d97706;strokeWidth=2;fontSize=13;fontColor=#451a03;spacing=10;fontStyle=1;" value="ADS1115 ADC Module&#xa;ads1.begin(0x48, &amp;Wire)&#xa;Gain: GAIN_SIXTEEN&#xa;Data rate in pasted code: 475 SPS" vertex="1">
+          <mxGeometry height="230" width="360" x="520" y="895" as="geometry" />
+        </mxCell>
+        <mxCell id="ads_sda" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fffbeb;strokeColor=#d97706;fontSize=12;align=center;" value="SDA" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="ads_scl" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fffbeb;strokeColor=#d97706;fontSize=12;align=center;" value="SCL" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="965" as="geometry" />
+        </mxCell>
+        <mxCell id="ads_vdd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fffbeb;strokeColor=#d97706;fontSize=12;align=center;" value="VDD" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="ads_gnd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fffbeb;strokeColor=#d97706;fontSize=12;align=center;" value="GND" vertex="1">
+          <mxGeometry height="24" width="90" x="520" y="1035" as="geometry" />
+        </mxCell>
+        <mxCell id="ads_a01" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fffbeb;strokeColor=#d97706;fontSize=12;align=center;" value="A0-A1 diff" vertex="1">
+          <mxGeometry height="24" width="90" x="790" y="950" as="geometry" />
+        </mxCell>
+        <mxCell id="ads_a23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fffbeb;strokeColor=#d97706;fontSize=12;align=center;" value="A2-A3 diff" vertex="1">
+          <mxGeometry height="24" width="90" x="790" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="shunt_dac2_gpio27" parent="1" style="shape=resistor;whiteSpace=wrap;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;spacingTop=6;fillColor=#fff7ed;strokeColor=#ea580c;strokeWidth=2;fontSize=12;fontColor=#431407;" value="1 kOhm shunt&#xa;inline sense resistor" vertex="1">
+          <mxGeometry height="44" width="75" x="920" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="sense_body" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=2;fontSize=13;fontColor=#4c0519;spacing=10;fontStyle=1;" value="Caravel / ReRAM Sense Path&#xa;Shunt is inline between DAC[2] and GPIO27&#xa;ADS reads Vshunt, firmware computes ReRAM resistance" vertex="1">
+          <mxGeometry height="120" width="350" x="1040" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="sense_a01" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#e11d48;fontSize=12;align=center;" value="Sense pair 1&#xa;to ADS A0-A1" vertex="1">
+          <mxGeometry height="32" width="125" x="1040" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="sense_a23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#e11d48;fontSize=12;align=center;" value="Sense pair 2&#xa;to ADS A2-A3" vertex="1">
+          <mxGeometry height="32" width="125" x="1040" y="1050" as="geometry" />
+        </mxCell>
+        <mxCell id="scan_header" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;fontColor=#450a0a;" value="ScanDebug / xclk pins" vertex="1">
+          <mxGeometry height="24" width="170" x="1260" y="595" as="geometry" />
+        </mxCell>
+        <mxCell id="car_xclk" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="xclk&#xa;J11-19 / U8 P9" vertex="1">
+          <mxGeometry height="34" width="160" x="1260" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="car_scan_dl" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="ScanInDL&#xa;GPIO22" vertex="1">
+          <mxGeometry height="34" width="160" x="1260" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="car_scan_dr" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="ScanInDR&#xa;GPIO21, active LOW" vertex="1">
+          <mxGeometry height="34" width="160" x="1260" y="715" as="geometry" />
+        </mxCell>
+        <mxCell id="car_scan_cc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="ScanInCC&#xa;GPIO35, held LOW" vertex="1">
+          <mxGeometry height="34" width="160" x="1260" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="car_tm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="TM&#xa;GPIO36" vertex="1">
+          <mxGeometry height="34" width="160" x="1260" y="805" as="geometry" />
+        </mxCell>
+        <mxCell id="car_reset" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="reset / resetb&#xa;trigger to Teensy 2" vertex="1">
+          <mxGeometry height="34" width="160" x="1260" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="car_scan_gnd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff1f2;strokeColor=#dc2626;fontSize=11;align=center;" value="Caravel GND&#xa;common reference" vertex="1">
+          <mxGeometry height="34" width="160" x="1260" y="895" as="geometry" />
+        </mxCell>
+        <mxCell id="teensy2_body" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e0f2fe;strokeColor=#0284c7;strokeWidth=2;fontSize=13;fontColor=#0c4a6e;spacing=10;fontStyle=1;" value="Teensy 2 / ScanDebug Driver&#xa;&#xa;Continuous external xclk: 1 MHz&#xa;Reset release sends dummy 0 + 16-bit scan word, LSB first&#xa;ScanInDR is active LOW&#xa;ScanInCC held LOW" vertex="1">
+          <mxGeometry height="350" width="230" x="1585" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_xclk" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0f9ff;strokeColor=#0284c7;fontSize=11;align=center;" value="Pin 9&#xa;XCLK output" vertex="1">
+          <mxGeometry height="34" width="115" x="1460" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_scan_dl" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0f9ff;strokeColor=#0284c7;fontSize=11;align=center;" value="Pin 2&#xa;SCAN_DL" vertex="1">
+          <mxGeometry height="34" width="115" x="1460" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_scan_dr" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0f9ff;strokeColor=#0284c7;fontSize=11;align=center;" value="Pin 3&#xa;SCAN_DR" vertex="1">
+          <mxGeometry height="34" width="115" x="1460" y="715" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_scan_cc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0f9ff;strokeColor=#0284c7;fontSize=11;align=center;" value="Pin 4&#xa;SCAN_CC" vertex="1">
+          <mxGeometry height="34" width="115" x="1460" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_tm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0f9ff;strokeColor=#0284c7;fontSize=11;align=center;" value="Pin 5&#xa;TM" vertex="1">
+          <mxGeometry height="34" width="115" x="1460" y="805" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_reset" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0f9ff;strokeColor=#0284c7;fontSize=11;align=center;" value="Pin 6&#xa;reset sense" vertex="1">
+          <mxGeometry height="34" width="115" x="1460" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="t2_gnd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f0f9ff;strokeColor=#0284c7;fontSize=11;align=center;" value="GND&#xa;common ground" vertex="1">
+          <mxGeometry height="34" width="115" x="1460" y="895" as="geometry" />
+        </mxCell>
+        <mxCell id="note_unmapped" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#fff7ed;strokeColor=#fb923c;fontSize=12;fontColor=#431407;spacing=8;" value="DAC[6], DAC[7], and DAC[8] are not connected in the supplied Caravel map. The pasted power-up function still writes DAC[6] = 3.3 V and DAC[7] = 0.6 V, so add those wires only if your board routes them." vertex="1">
+          <mxGeometry height="44" width="870" x="520" y="1145" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sck_d1" edge="1" parent="1" source="t_sck" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563eb;strokeWidth=2;fontSize=11;" target="d1_sclk" value="SCK pin 27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_mosi_d1" edge="1" parent="1" source="t_mosi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563eb;strokeWidth=2;fontSize=11;" target="d1_sdi" value="MOSI pin 26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cs1_d1" edge="1" parent="1" source="t_cs1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563eb;strokeWidth=2;fontSize=11;" target="d1_cs" value="CS1 pin 2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ldac_d1" edge="1" parent="1" source="t_ldac" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563eb;strokeWidth=2;fontSize=11;dashed=1;" target="d1_ldac" value="LDAC pin 6 optional">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_vio_d1" edge="1" parent="1" source="t_dac_3v3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#64748b;strokeWidth=2;fontSize=11;" target="d1_vio" value="3.3 V logic">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_gnd_d1" edge="1" parent="1" source="t_dac_gnd" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#64748b;strokeWidth=2;fontSize=11;" target="d1_gnd" value="common GND">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac0_caravel" edge="1" parent="1" source="src_dac0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio33" value="DAC[0] -&gt; Vcc_read">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac1_caravel" edge="1" parent="1" source="src_dac1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio26" value="DAC[1] -&gt; Vcc_wl_read">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac2_shunt" edge="1" parent="1" source="src_dac2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="shunt_dac2_gpio27" value="DAC[2] to shunt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_shunt_gpio27" edge="1" parent="1" source="shunt_dac2_gpio27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio27" value="shunt -&gt; Vcc_set">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac3_caravel" edge="1" parent="1" source="src_dac3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio30" value="DAC[3] -&gt; Vcc_wl_set">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac4_caravel" edge="1" parent="1" source="src_dac4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio28" value="DAC[4] -&gt; Vcc_wl_reset">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac5_caravel" edge="1" parent="1" source="src_dac5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_vdda2" value="DAC[5] -&gt; Vcc_reset">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac9_caravel" edge="1" parent="1" source="src_dac9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio34" value="DAC[9] -&gt; Iref">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac10_caravel" edge="1" parent="1" source="src_dac10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio32" value="DAC[10] -&gt; Vcomp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac11_caravel" edge="1" parent="1" source="src_dac11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio31" value="DAC[11] -&gt; Bias_comp2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac12_caravel" edge="1" parent="1" source="src_dac12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio29" value="DAC[12] -&gt; Vbias">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac13_caravel" edge="1" parent="1" source="src_dac13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_gpio25" value="DAC[13] -&gt; dc_bias">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac14_caravel" edge="1" parent="1" source="src_dac14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_vdda1" value="DAC[14] -&gt; VDDa1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dac15_caravel" edge="1" parent="1" source="src_dac15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#16a34a;strokeWidth=2;fontSize=11;" target="pad_vccd2" value="DAC[15] -&gt; VDDc2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sda_ads" edge="1" parent="1" source="t_sda" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#d97706;strokeWidth=2;fontSize=11;" target="ads_sda" value="SDA pin 18">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="764" />
+              <mxPoint x="470" y="942" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_scl_ads" edge="1" parent="1" source="t_scl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#d97706;strokeWidth=2;fontSize=11;" target="ads_scl" value="SCL pin 19">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="485" y="799" />
+              <mxPoint x="485" y="977" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_vdd_ads" edge="1" parent="1" source="t_adc_3v3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#64748b;strokeWidth=2;fontSize=11;" target="ads_vdd" value="3.3 V">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="834" />
+              <mxPoint x="470" y="1012" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_gnd_ads" edge="1" parent="1" source="t_adc_gnd" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#64748b;strokeWidth=2;fontSize=11;" target="ads_gnd" value="GND">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="455" y="869" />
+              <mxPoint x="455" y="1047" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_sense1_ads" edge="1" parent="1" source="sense_a01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#e11d48;strokeWidth=2;fontSize=11;" target="ads_a01" value="Vshunt pair 1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_shunt_ads" edge="1" parent="1" source="shunt_dac2_gpio27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#e11d48;strokeWidth=2;fontSize=11;dashed=1;" target="ads_a01" value="measure Vshunt across inline resistor">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="958" y="640" />
+              <mxPoint x="835" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_sense2_ads" edge="1" parent="1" source="sense_a23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#e11d48;strokeWidth=2;fontSize=11;" target="ads_a23" value="Vshunt pair 2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_xclk" edge="1" parent="1" source="t2_xclk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#0284c7;strokeWidth=2;fontSize=11;" target="car_xclk" value="Pin 9 -&gt; xclk, 1 MHz">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_scan_dl" edge="1" parent="1" source="t2_scan_dl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#0284c7;strokeWidth=2;fontSize=11;" target="car_scan_dl" value="Pin 2 -&gt; ScanInDL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_scan_dr" edge="1" parent="1" source="t2_scan_dr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#0284c7;strokeWidth=2;fontSize=11;" target="car_scan_dr" value="Pin 3 -&gt; ScanInDR, active LOW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_scan_cc" edge="1" parent="1" source="t2_scan_cc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#0284c7;strokeWidth=2;fontSize=11;" target="car_scan_cc" value="Pin 4 -&gt; ScanInCC held LOW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_tm" edge="1" parent="1" source="t2_tm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#0284c7;strokeWidth=2;fontSize=11;" target="car_tm" value="Pin 5 -&gt; TM">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_reset" edge="1" parent="1" source="car_reset" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#0284c7;strokeWidth=2;fontSize=11;" target="t2_reset" value="Caravel reset/resetb -&gt; Pin 6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_t2_gnd" edge="1" parent="1" source="t2_gnd" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#64748b;strokeWidth=2;fontSize=11;" target="car_scan_gnd" value="common GND">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note_miso" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f8fafc;strokeColor=#94a3b8;fontSize=12;fontColor=#334155;spacing=8;" value="Note: DAC SDO/MISO is not used in the pasted DAC transfer functions, so it is intentionally not drawn as a required wire here." vertex="1">
+          <mxGeometry height="50" width="390" x="50" y="935" as="geometry" />
+        </mxCell>
+        <mxCell id="note_i2c" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;fillColor=#f8fafc;strokeColor=#94a3b8;fontSize=12;fontColor=#334155;spacing=8;" value="Teensy pins 18 and 19 are the default Wire SDA/SCL pins for this diagram. Change those labels if your hardware uses a different Teensy I2C bus." vertex="1">
+          <mxGeometry height="60" width="390" x="50" y="1000" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
