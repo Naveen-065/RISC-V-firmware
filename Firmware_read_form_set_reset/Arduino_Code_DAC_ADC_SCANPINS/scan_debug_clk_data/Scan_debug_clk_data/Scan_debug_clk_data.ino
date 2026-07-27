@@ -1,4 +1,4 @@
-//Teensy 4.1 usb port ----> usb;xxxxxxx/2/1/4
+//Teensy 4.1 usb port ----> usb;xxxxxxx/2/1/1
 
 /*
   Teensy 4.1 -> Caravel external xclk + reset-triggered ScanDebug packet driver
