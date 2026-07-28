@@ -102,6 +102,7 @@ void configure_io(void)
     reg_mprj_io_35 = GPIO_MODE_USER_STD_INPUT_NOPULL;
     reg_mprj_io_36 = GPIO_MODE_USER_STD_INPUT_NOPULL;
     reg_mprj_io_37 = GPIO_MODE_USER_STD_INPUT_NOPULL;
+    
 
     // Apply IO configuration
     reg_mprj_xfer = 1;
@@ -166,16 +167,24 @@ void main(void)
     wait_cycles(500);
 
     print("[TC_READ_HW] Writing command 3: 0x43201405\n");
-    //REG32(NEURO_ADDR) = 0x43E01405;
-     REG32(NEURO_ADDR) = 0x43201405;
+    REG32(NEURO_ADDR) = 0x43E01405;
+     //REG32(NEURO_ADDR) = 0x43201405;
     wait_cycles(500);
-
-    print("[TC_READ_HW] Writing command 4: 0x4002AAFF\n");
-    REG32(NEURO_ADDR) = 0x4002AAFF;
-    wait_cycles(500);
+///////////////////////////////////////////////////////////////////////////////////////
+    print("[TC_READ_HW] Writing to read cell row 0 , col 31 command 4: 0x4002AAFF\n");
+    //REG32(NEURO_ADDR) = 0x4002AAFF;//Reading (0,0) getting 31st column in output
+    //REG32(NEURO_ADDR) = 0x7FE2AAFF;// Reading (31, 31) cell 41F3AAFF
+    REG32(NEURO_ADDR) = 0x41E3AAFF;
+    wait_cycles(500); 
+////////////////////////////////////////////////////////////////////////////////////////    
+    print("[TC_READ_HW] to read error register from row 0 - col 31 \n");
+    REG32(NEURO_ADDR) = 0x41F8AAFF;
+    wait_cycles(500); 
     
     print("[TC_READ_HW] Writing command 4: 0x4002AA82\n");
-    REG32(NEURO_ADDR) = 0x4002AA82;
+    //REG32(NEURO_ADDR) = 0x4002AA82;
+    //REG32(NEURO_ADDR) = 0x4402AA82;
+    REG32(NEURO_ADDR) = 0x41E3AAFF;
     wait_cycles(500);
     
     
@@ -190,10 +199,10 @@ void main(void)
      REG32(NEURO_ADDR) = 0x44001405;
     wait_cycles(500);
     print("[TC_READ_HW] Writing command 4: 0xC00388A2\n");
-    REG32(NEURO_ADDR) = 0xC00388A2;                      // read for (0,0) cell
+    REG32(NEURO_ADDR) = 0xC00388A2;                     // read for (0,0) cell
     wait_cycles(500);
     //print("[TC_READ_HW] Writing command 4: 0x4003AA82\n");
-    //REG32(NEURO_ADDR) = 0x4003AA82;                     // set for (0,0) cell
+    //REG32(NEURO_ADDR) = 0x4003AAC2;                      // set for (0,0) cell
     //wait_cycles(500);
     //print("[TC_READ_HW] Writing command 4: 0x8003AA82\n");
     //REG32(NEURO_ADDR) = 0x8003AA82;                     // reset for (0,0) cell
